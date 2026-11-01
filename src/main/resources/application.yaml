@@ -1,3 +1,9 @@
 spring:
   application:
     name: catalog-service
+server:
+  port: 9001
+  tomcat:
+    threads:
+      max: 50
+      min-spare: 5
