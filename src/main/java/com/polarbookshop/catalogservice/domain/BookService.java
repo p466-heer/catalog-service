@@ -8,7 +8,6 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    // Constructor injection: the dependency is required, final, and never null.
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -36,11 +35,18 @@ public class BookService {
     public Book editBookDetails(String isbn, Book book) {
         return bookRepository.findByIsbn(isbn)
                 .map(existing -> {
-
-                    var updated = new Book(existing.isbn(),
-                            book.title(), book.author(), book.price());
+                    var updated = new Book(
+                            existing.isbn(),
+                            book.title(),
+                            book.author(),
+                            book.price()
+                    );
                     return bookRepository.save(updated);
                 })
                 .orElseGet(() -> addBookToCatalog(book));
+    }
+
+    public boolean bookExists(String isbn) {
+        return bookRepository.existsByIsbn(isbn);
     }
 }
