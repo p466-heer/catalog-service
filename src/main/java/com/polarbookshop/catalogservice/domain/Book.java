@@ -47,6 +47,10 @@ public record Book(
 
 ) {
         public static Book of(String isbn, String title, String author, Double price) {
-                return new Book(null, isbn, title, author, price, null, null, null, null);
+                return of(isbn, title, author, price, null);
+        }
+
+        public static Book of(String isbn, String title, String author, Double price, String publisher) {
+                return new Book(null, isbn, title, author, price, publisher, null, null, null);
         }
 }

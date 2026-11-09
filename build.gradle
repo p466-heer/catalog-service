@@ -52,5 +52,5 @@ tasks.named('test') {
 }
 
 bootRun {
-	systemProperty 'spring.profiles.active', 'testdata'
+	systemProperty 'polar.testdata.enabled', 'true'
 }

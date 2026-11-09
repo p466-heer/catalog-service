@@ -1,4 +1,3 @@
-
 package com.polarbookshop.catalogservice.web;
 
 import java.util.HashMap;
@@ -6,6 +5,7 @@ import java.util.Map;
 
 import com.polarbookshop.catalogservice.domain.BookAlreadyExistsException;
 import com.polarbookshop.catalogservice.domain.BookNotFoundException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +25,12 @@ public class BookControllerAdvice {
     @ExceptionHandler(BookAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     String bookAlreadyExistsHandler(BookAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    String optimisticLockingHandler(OptimisticLockingFailureException ex) {
         return ex.getMessage();
     }
 
