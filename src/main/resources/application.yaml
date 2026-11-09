@@ -1,9 +1,17 @@
 spring:
   application:
     name: catalog-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/polardb_catalog
+    username: user
+    password: password
+
 server:
   port: 9001
   tomcat:
     threads:
       max: 50
       min-spare: 5
+
+polar:
+  greeting: Welcome to the local book catalog!

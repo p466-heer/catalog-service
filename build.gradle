@@ -17,19 +17,40 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
+	// Web API and validation
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// PostgreSQL and Spring Data JDBC
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	// Database migrations
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+
+	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
 	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
 	testImplementation 'org.springframework.boot:spring-boot-starter-jackson-test'
-}
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jdbc-test'
 
+	// Testcontainers
+	// Testcontainers
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation platform('org.testcontainers:testcontainers-bom:1.21.4')
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootRun {
+	systemProperty 'spring.profiles.active', 'testdata'
 }

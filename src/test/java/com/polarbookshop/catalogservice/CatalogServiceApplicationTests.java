@@ -1,4 +1,3 @@
-
 package com.polarbookshop.catalogservice;
 
 import com.polarbookshop.catalogservice.domain.Book;
@@ -6,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
+@ActiveProfiles("integration")
 class CatalogServiceApplicationTests {
 
 	@Autowired
@@ -19,7 +20,7 @@ class CatalogServiceApplicationTests {
 
 	@Test
 	void whenPostRequestThenBookCreated() {
-		var expected = new Book("1231231231", "Title", "Author", 9.90);
+		var expected = Book.of("1231231231", "Title", "Author", 9.90);
 
 		webTestClient
 				.post().uri("/books")
@@ -34,7 +35,7 @@ class CatalogServiceApplicationTests {
 
 	@Test
 	void whenPutRequestForNewBookThenReturn201() {
-		var book = new Book("1111111111", "New Book", "Author", 15.00);
+		var book = Book.of("1111111111", "New Book", "Author", 15.00);
 
 		webTestClient
 				.put().uri("/books/" + book.isbn())
@@ -49,7 +50,7 @@ class CatalogServiceApplicationTests {
 
 	@Test
 	void whenPutRequestForExistingBookThenReturn200() {
-		var book = new Book("2222222222", "Original Title", "Author", 10.00);
+		var book = Book.of("2222222222", "Original Title", "Author", 10.00);
 
 		webTestClient
 				.post().uri("/books")
@@ -57,7 +58,7 @@ class CatalogServiceApplicationTests {
 				.exchange()
 				.expectStatus().isCreated();
 
-		var updatedBook = new Book("2222222222", "Updated Title", "Author", 20.00);
+		var updatedBook = Book.of("2222222222", "Updated Title", "Author", 20.00);
 
 		webTestClient
 				.put().uri("/books/" + book.isbn())
@@ -71,10 +72,9 @@ class CatalogServiceApplicationTests {
 				});
 	}
 
-
 	@Test
 	void whenBookCreatedUpdatedAndDeletedThenBookNotFound() {
-		var book = new Book("3333333333", "Original Title", "Author", 10.00);
+		var book = Book.of("3333333333", "Original Title", "Author", 10.00);
 
 		//POST - create a new book
 		webTestClient
@@ -93,7 +93,7 @@ class CatalogServiceApplicationTests {
 				});
 
 		// PUT - update the existing book
-		var updatedBook = new Book(
+		var updatedBook = Book.of(
 				"3333333333", "Updated Title", "Author", 20.00
 		);
 
@@ -119,5 +119,4 @@ class CatalogServiceApplicationTests {
 				.exchange()
 				.expectStatus().isNotFound();
 	}
-
 }
