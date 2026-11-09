@@ -54,3 +54,11 @@ tasks.named('test') {
 bootRun {
 	systemProperty 'polar.testdata.enabled', 'true'
 }
+
+tasks.named('jar') { enabled = false }
+
+
+bootBuildImage {
+	imageName = "${project.name}"
+	environment = ["BP_JVM_VERSION": "21"]
+}
