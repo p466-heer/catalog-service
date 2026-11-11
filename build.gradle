@@ -21,6 +21,7 @@ dependencies {
 	// Web API and validation
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	// PostgreSQL and Spring Data JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -55,8 +56,9 @@ bootRun {
 	systemProperty 'polar.testdata.enabled', 'true'
 }
 
-tasks.named('jar') { enabled = false }
-
+tasks.named('jar') {
+	enabled = false
+}
 
 bootBuildImage {
 	imageName = "${project.name}"
