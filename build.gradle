@@ -31,14 +31,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-flyway'
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
 
+	// Keycloak JWT authentication
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
 	testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
 	testImplementation 'org.springframework.boot:spring-boot-starter-jackson-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jdbc-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
-	// Testcontainers
 	// Testcontainers
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation platform('org.testcontainers:testcontainers-bom:1.21.4')

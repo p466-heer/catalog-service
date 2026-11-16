@@ -8,8 +8,10 @@ import com.polarbookshop.catalogservice.domain.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,8 +23,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.security.oauth2.server.resource.autoconfigure.OAuth2ResourceServerAutoConfiguration;
+import org.springframework.boot.security.oauth2.server.resource.autoconfigure.web.OAuth2ResourceServerWebSecurityAutoConfiguration;
 
-@WebMvcTest(BookController.class)
+@WebMvcTest(
+        controllers = BookController.class,
+        excludeAutoConfiguration = {
+                OAuth2ResourceServerAutoConfiguration.class,
+                OAuth2ResourceServerWebSecurityAutoConfiguration.class
+        }
+)
+@AutoConfigureMockMvc(addFilters = false)
 class BookControllerMvcTests {
 
     @Autowired
@@ -34,6 +47,7 @@ class BookControllerMvcTests {
     @Test
     void whenGetBookNotExistingThenShouldReturn404() throws Exception {
         String isbn = "7373731394";
+
         given(bookService.viewBookDetails(isbn))
                 .willThrow(BookNotFoundException.class);
 
@@ -42,6 +56,7 @@ class BookControllerMvcTests {
     }
 
     @Test
+    @WithMockUser(roles = "employee")
     void whenPostBookAlreadyExistsThenShouldReturn422() throws Exception {
         var book = Book.of("1234567890", "Title", "Author", 9.90);
 
@@ -49,6 +64,7 @@ class BookControllerMvcTests {
                 .willThrow(new BookAlreadyExistsException(book.isbn()));
 
         mockMvc.perform(post("/books")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -62,8 +78,10 @@ class BookControllerMvcTests {
     }
 
     @Test
+    @WithMockUser(roles = "employee")
     void whenPostBookInvalidThenShouldReturn400() throws Exception {
         mockMvc.perform(post("/books")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -92,6 +110,7 @@ class BookControllerMvcTests {
     }
 
     @Test
+    @WithMockUser(roles = "employee")
     void whenOptimisticLockingFailsThenShouldReturn409() throws Exception {
         var book = Book.of("1234567890", "Title", "Author", 9.90);
 
@@ -100,6 +119,7 @@ class BookControllerMvcTests {
                         "Book was modified by another request"));
 
         mockMvc.perform(put("/books/1234567890")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {

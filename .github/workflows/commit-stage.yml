@@ -1,5 +1,6 @@
 
 name: Commit Stage
+
 on: push
 
 jobs:
@@ -25,6 +26,14 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew build
+
+
+      - name: Validate Kubernetes manifests
+        run: |
+          curl -fsSL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz \
+            | tar xz kubeconform
+          ./kubeconform -strict -summary k8s/catalog-service.yml
+      
 
       - name: Code vulnerability scanning
         uses: anchore/scan-action@v6

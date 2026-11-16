@@ -1,3 +1,4 @@
+
 package com.polarbookshop.catalogservice.domain;
 
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class BookService {
         if (bookRepository.existsByIsbn(book.isbn())) {
             throw new BookAlreadyExistsException(book.isbn());
         }
+
         return bookRepository.save(book);
     }
 
@@ -49,8 +51,11 @@ public class BookService {
                             book.publisher(),
                             existing.createdDate(),
                             existing.lastModifiedDate(),
+                            existing.createdBy(),
+                            existing.lastModifiedBy(),
                             existing.version()
                     );
+
                     return bookRepository.save(updated);
                 })
                 .orElseGet(() -> addBookToCatalog(book));

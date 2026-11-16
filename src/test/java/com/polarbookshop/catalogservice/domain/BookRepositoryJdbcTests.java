@@ -1,3 +1,4 @@
+
 package com.polarbookshop.catalogservice.domain;
 
 import com.polarbookshop.catalogservice.config.DataConfig;
@@ -120,6 +121,8 @@ class BookRepositoryJdbcTests {
                 firstCopy.publisher(),
                 firstCopy.createdDate(),
                 firstCopy.lastModifiedDate(),
+                firstCopy.createdBy(),
+                firstCopy.lastModifiedBy(),
                 firstCopy.version()
         );
 
@@ -134,6 +137,8 @@ class BookRepositoryJdbcTests {
                 secondCopy.publisher(),
                 secondCopy.createdDate(),
                 secondCopy.lastModifiedDate(),
+                secondCopy.createdBy(),
+                secondCopy.lastModifiedBy(),
                 secondCopy.version()
         );
 

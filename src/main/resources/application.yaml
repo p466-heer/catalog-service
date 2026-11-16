@@ -1,16 +1,28 @@
+
 spring:
   application:
     name: catalog-service
+
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+
   datasource:
-    url: jdbc:postgresql://localhost:5433/polardb_catalog
+    url: jdbc:postgresql://localhost:5434/polardb_catalog
     username: user
     password: password
     hikari:
       connection-timeout: 2000
       maximum-pool-size: 5
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/PolarBookshop
+
 server:
   port: 9001
+  shutdown: graceful
   tomcat:
     threads:
       max: 50
@@ -18,3 +30,10 @@ server:
 
 polar:
   greeting: Welcome to the local book catalog!
+
+management:
+  endpoint:
+    health:
+      group:
+        readiness:
+          include: readinessState,db
